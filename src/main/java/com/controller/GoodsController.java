@@ -67,7 +67,7 @@ public class GoodsController {
     public void selectPriceByName(String goodsName,HttpServletRequest request, HttpServletResponse response){
         String name =request.getParameter("name");
         Goods goods = goodsService.findByName(name);
-        System.out.println("goods----selectPriceByName-------"+goods);
+        System.out.println("selectPriceByName--->"+goods);
         request.setAttribute("goods", goods);
         PrintWriter out = null;
         try {
@@ -114,7 +114,6 @@ public class GoodsController {
             saleDetails.add(saleDetail);
         }
         int resultS = saleDetailService.insert(saleDetails);
-        System.out.println(resultS);
         PrintWriter out = response.getWriter();
         if(resultS>0) {
             System.out.println("销售情况表添加成功,添加了"+resultS+"条数据");
@@ -139,7 +138,7 @@ public class GoodsController {
     public void goodsSaleDetailsByPrice1000(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         List<GoodsSaleDetails> goodsSaleDetails = goodsService.findByPrice();
         for (GoodsSaleDetails goodsSaleDetails1:goodsSaleDetails) {
-            System.out.println("goodsSaleDetailsByPrice1000-----"+goodsSaleDetails1);
+            System.out.println("goodsSaleDetailsByPrice1000--->"+goodsSaleDetails1);
         }
         request.setAttribute("goodsSaleDetails", goodsSaleDetails);
         request.getRequestDispatcher("goodsSaleDetailsByPrice1000.jsp").forward(request, response);
@@ -201,7 +200,7 @@ public class GoodsController {
         List<GoodsSaleDetailsExcel> li =ExcelUtil.readExcel(path);
 
         for (int i = 0; i<li.size();i++){
-            System.out.println("exportExcel-----"+li.get(i));
+            System.out.println("exportExcel--->"+li.get(i));
         }
         PrintWriter out = response.getWriter();
         if(saveExcelResult==true) {
