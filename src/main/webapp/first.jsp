@@ -162,75 +162,113 @@
                 n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
                 $("table#myTable").find("tr:eq("+n+")").remove();
             });
+
+            //调用合计方法 重新计算合计
+            TotalPrice();
+
             if (confirm("确定删除所选行吗？")) {
                 $("#" + rowID).remove();
             }
         }
         /**
+         * 合计方法
+         */
+        function TotalPrice() {
+            //合计
+            var SubTotalNum = 0;
+            //获取合计
+            var SubTotal=document.getElementById("SubTotal");
+            $("input[name='goodsSubTotal']").each(function () {
+                //获取商品小计一列所有数据
+                var goodsSubTotal=$(this).parents("tr").find("#goodsSubTotal").val();
+                // alert(goodsSubTotal);
+                //计算合计 合计=小计之和   前端加法运算 num*1 否则就是字符串拼接
+                SubTotalNum = (goodsSubTotal)*1+(SubTotalNum)*1;
+            });
+            // alert(SubTotalNum+"---------合计");
+            //合计赋值
+            SubTotal.value=	SubTotalNum;
+        }
+        /**
          *选择数量时进行小计以及合计
          */
-        var SubTotalNum = 0;
         function myMathFunction(obj){
             //获取上上级tr 的demo
             var tr = obj.parentNode.parentNode;
+            //获取商品名称
+            var GoodsName=$(tr).find("select[name='GoodsName']").val();
             //获取商品价格
             var goodsPrice=$(tr).find("select[name='SelectPrice']").val();
             //获取商品数量
             // var goodsNumber=document.getElementById("goodsNumber").value;根据id获取
             var goodsNumber=$(tr).find("input[name='goodsNumber']").val();
-            //商品小计等于数量乘以价格
-            $(tr).find("input[name='goodsSubTotal']").val((goodsNumber)*(goodsPrice));
-            //获取商品小计
-            var goodsSubTotal=$(tr).find("input[name='goodsSubTotal']").val();
-            // alert("价格："+goodsPrice+"数量"+goodsNumber+"小计"+goodsSubTotal);
-            // var goodsSubTotal=document.getElementById("goodsSubTotal");根据id获取
+            /**
+             * 如果GoodsName，goodsPrice为-1提示选择商品不计算小计
+             */
+            if(GoodsName=="-1"||goodsPrice=="-1"){
+                alert("请先选择商品！");
+                $(tr).find("input[name='goodsNumber']").val('');//置空商品数量
+            }else {
+                //商品小计等于数量乘以价格
+                $(tr).find("input[name='goodsSubTotal']").val((goodsNumber)*(goodsPrice));
 
-            //合计=小计之和  前端加法运算 num*1 否则就是字符串拼接
-            SubTotalNum= (goodsSubTotal)*1+(SubTotalNum)*1;
-            var SubTotal=document.getElementById("SubTotal");
-            //合计赋值
-            SubTotal.value=	SubTotalNum;
+                // var goodsSubTotal=$(tr).find("input[name='goodsSubTotal']").val();
+                // alert("价格："+goodsPrice+"数量"+goodsNumber+"小计"+goodsSubTotal);
+                // var goodsSubTotal=document.getElementById("goodsSubTotal");根据id获取
+
+                //调用合计方法
+                TotalPrice();
+            }
         }
         /**
          * 保存多条数据
          */
         function save() {
-            var name = '';
-            var price = '';
-            var goodsNumber = '';
-            var goodsSubTotal = '';
-            $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
-                name+=$(this).parents("tr").find("option[name='GoodsName']:selected").val() + ',';
-                price+=$(this).parents("tr").find("select[name='SelectPrice']").val() + ',';
-                goodsNumber+=$(this).parents("tr").find("#goodsNumber").val() + ',';
-                goodsSubTotal+=$(this).parents("tr").find("#goodsSubTotal").val() + ',';
-            });
-             		/*alert(name);
-                    alert(price);
-                    alert(goodsNumber);
-                    alert(goodsSubTotal);*/
-            $.ajax({
-                url: "insertGoodsList",
-                type: "POST",
-                data: {
-                    "name": name,
-                    "price": price,
-                    "number": goodsNumber,
-                    "subTotal": goodsSubTotal
-                },
-                dataType : "json",
-                // contentType: "application/json;charset=utf-8",
-                success: function(result) {
-                    response = result.success;
-                    var num = response.substr(2,(response.length-4));
-                    // alert(response.substr(2,(response.length-4)));
-                    if (response=="error") {
-                        location.href = "error.jsp";
-                    } else {
-                        location.href = "success.jsp?num="+num;
+            //获取checkbox选中的个数
+            var  checkboxNum =  $("input[type='checkbox']:checked").length;
+            if (checkboxNum ==0){
+                alert("请勾选需要添加的商品数据！");
+            } else {
+                var name = '';
+                var price = '';
+                var goodsNumber = '';
+                var goodsSubTotal = '';
+                $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
+                    name+=$(this).parents("tr").find("option[name='GoodsName']:selected").val() + ',';
+                    price+=$(this).parents("tr").find("select[name='SelectPrice']").val() + ',';
+                    goodsNumber+=$(this).parents("tr").find("#goodsNumber").val() + ',';
+                    goodsSubTotal+=$(this).parents("tr").find("#goodsSubTotal").val() + ',';
+                    if($(this).parents("tr").find("#goodsNumber").val()==""||$(this).parents("tr").find("#goodsNumber").val()==null){
+                        alert("请选择商品数量！！！");
                     }
-                }
-            });
+                });
+                /*alert(name);
+               alert(price);
+               alert(goodsNumber);
+               alert(goodsSubTotal);*/
+                $.ajax({
+                    url: "insertGoodsList",
+                    type: "POST",
+                    data: {
+                        "name": name,
+                        "price": price,
+                        "number": goodsNumber,
+                        "subTotal": goodsSubTotal
+                    },
+                    dataType : "json",
+                    // contentType: "application/json;charset=utf-8",
+                    success: function(result) {
+                        response = result.success;
+                        var num = response.substr(2,(response.length-4));
+                        // alert(response.substr(2,(response.length-4)));
+                        if (response=="error") {
+                            location.href = "error.jsp";
+                        } else {
+                            location.href = "success.jsp?num="+num;
+                        }
+                    }
+                });
+            }
         }
         /**
          * 单价>1000的商品销量
@@ -250,10 +288,10 @@
         <input id="addTable" type="button" value="增加一行" onclick="addTable()" style="width: 80px"/>
     </td>
     <td>
-        <input id="deleteTable"  type="button" value="删除选中的行" onclick="deleteSelectedRow()" style="width: 100px"/>
+        <input id="deleteTable"  type="button" value="删除选中的行" onclick="deleteSelectedRow(this)" style="width: 100px"/>
     </td>
     <td>
-        <a style="margin-left: 100px">合计：</a><input id="SubTotal" type="text" disabled>
+        <a style="margin-left: 25px">合计：</a><input id="SubTotal" type="text" disabled>
     </td>
 </tr>
 </div>
@@ -275,9 +313,6 @@
             </td>
             <td>
                 <input type="text" value="小计" style="text-align: center;width: 80px" disabled="disabled">
-            </td>
-            <td>
-                <input type="text" id="export_rows" name="" value="导出" style="text-align: center;width: 80px" disabled="disabled">
             </td>
         </tr>
         <tr>
@@ -305,9 +340,7 @@
             <td>
                 <input type="text" id="goodsSubTotal" name="goodsSubTotal"  value="" style="border: 1px solid lightskyblue;text-align: center;width: 80px">
             </td>
-            <td>
-                <input type="button" id="" name="" value="导出" style="border: 1px solid lightskyblue;text-align: center;width: 80px" onclick="exportExcle()">
-            </td>
+
         </tr>
     </table>
 </form>

@@ -25,5 +25,5 @@ public class GoodsSaleDetails {
 	public String toString() {
 		return "GoodsSaleDetails [goods=" + goods + ", saleDetail=" + saleDetail + "]";
 	}
-	
+
 }

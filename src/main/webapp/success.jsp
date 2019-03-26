@@ -17,7 +17,7 @@
 </head>
 <body>
 <h1 style="color: green;margin-left: 300px;">
-success!添加了<%=num%>条数据！
+success!添加了<%=num%>条商品销售数据！
 </h1>
 <br>
 <a href="showGoods" style="margin-left: 600px">返回</a>
