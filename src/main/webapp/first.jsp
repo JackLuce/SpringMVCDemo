@@ -175,11 +175,12 @@
                     n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
                     $("table#myTable").find("tr:eq("+n+")").remove();
                 });
+
+                //调用合计方法 重新计算合计
+                TotalPrice();
+
                 $("#" + rowID).remove();
             }
-
-            //调用合计方法 重新计算合计
-            TotalPrice();
         }
         /**
          * 合计方法
