@@ -158,28 +158,31 @@
          删除所选行
          */
         function deleteSelectedRow(rowID) {
+            if ($("input[name='id']:checked").length>0){
+                var con = confirm("确定删除所选行吗？");
+                // alert(con);
+                if (con == false) {
+                    //取消删除，取消checkbox选中
+                    $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
+                        n = $(this).parents("tr").index();
+                        var boxes = document.getElementsByName("id");
+                        for (var i=0;i<boxes.length;i++){
+                            boxes[i].checked = false;
+                        }
+                    });
+                }else {
+                    $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
+                        n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
+                        $("table#myTable").find("tr:eq("+n+")").remove();
+                    });
 
-            var con = confirm("确定删除所选行吗？");
-            // alert(con);
-            if (con == false) {
-                //取消删除，取消checkbox选中
-                $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
-                    var boxes = document.getElementsByName("id");
-                    n = $(this).parents("tr").index();
-                    for (var i=0;i<boxes.length;i++){
-                        boxes[i].checked = false;
-                    }
-                });
-            }else {
-                $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
-                    n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
-                    $("table#myTable").find("tr:eq("+n+")").remove();
-                });
+                    //调用合计方法 重新计算合计
+                    TotalPrice();
 
-                //调用合计方法 重新计算合计
-                TotalPrice();
-
-                $("#" + rowID).remove();
+                    $("#" + rowID).remove();
+                }
+            } else {
+                    alert("请选择要删除的数据！");
             }
         }
         /**
