@@ -27,7 +27,10 @@
             // alert(price);
             // alert(number);
             // alert(subTotal);
-            $.ajax({
+            //用window.location可以在浏览器页面下载，用ajax请求不可以在页面下载
+            window.location.href = "exportExcel?id="+id+"&name="+name+"&price="+price+"&number="+number+"&subTotal="+subTotal;
+
+		    /*$.ajax({
                 url: "exportExcel",
                 type: "POST",
                 data: {
@@ -49,7 +52,7 @@
                         location.href = "goodsSaleDetailsByPrice1000";
                     }
                 }
-            });
+            });*/
         }
 		
 	</script>

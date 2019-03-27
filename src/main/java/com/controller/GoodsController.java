@@ -4,22 +4,13 @@ import com.entity.Goods;
 import com.entity.GoodsSaleDetails;
 import com.entity.GoodsSaleDetailsExcel;
 import com.entity.SaleDetail;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.service.GoodsService;
 import com.service.SaleDetailService;
 import com.serviceimpl.GoodsServiceImpl;
 import com.serviceimpl.SaleDetailServiceImpl;
-import com.sun.deploy.net.HttpResponse;
-import com.util.ConvertUtil;
 import com.util.ExcelUtil;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -27,7 +18,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.*;
+import java.io.BufferedOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -150,7 +145,7 @@ public class GoodsController {
      * @param response
      */
     @ResponseBody
-    @RequestMapping(value = "/exportExcel",method = RequestMethod.POST)
+    @RequestMapping(value = "/exportExcel",method = RequestMethod.GET)
     public String exportExcel(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //获取id
         String idsStr = request.getParameter("id");
@@ -192,9 +187,26 @@ public class GoodsController {
         //将数据装换为Excel文件的形式
         HSSFWorkbook hssfWorkbook= ExcelUtil.writeToExcel(goodsSaleDetailsExcelList,title,sheetName);
 
-        //将生成的Excel保存到指定位置
-        String path ="E:/"+fileName;
+        response.reset(); // 清除buffer缓存
+        response.setContentType("application/ms-excel;charset=UTF-8");
+        // 指定下载的文件名
+        response.setHeader("Content-Disposition", "attachment;filename="
+                .concat(String.valueOf(URLEncoder.encode(fileName, "UTF-8"))));
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
 
+        OutputStream outputStream = response.getOutputStream();
+        BufferedOutputStream bufferedOutPut = new BufferedOutputStream(outputStream);
+        bufferedOutPut.flush();
+        hssfWorkbook.write(outputStream);
+        bufferedOutPut.close();
+
+        /**
+         * 直接保存到指定位置
+         */
+        /*//将生成的Excel保存到指定位置
+        String path ="E:/"+fileName;
         boolean saveExcelResult = ExcelUtil.saveExcel(path, hssfWorkbook);
         //读取指定位置下面的Excel文件内容
         List<GoodsSaleDetailsExcel> li =ExcelUtil.readExcel(path);
@@ -209,8 +221,8 @@ public class GoodsController {
         }else {
             out.write("{\"success\":\"error\"}");
             out.close();
-        }
-        return "";
+        }*/
+        return fileName;
     }
 
     public List<Goods> getListGoods() {
