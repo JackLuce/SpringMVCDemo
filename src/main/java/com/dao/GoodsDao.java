@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.entity.Goods;
 import com.entity.GoodsSaleDetails;
+import com.entity.GoodsSaleDetailsChart;
 
 public interface GoodsDao {
 
@@ -52,5 +53,10 @@ public interface GoodsDao {
 	 * @return
 	 */
 	public int delete(Goods goods);
-	
+
+	/**
+	 * 查询绘制图表数据
+	 * @return
+	 */
+	public List<GoodsSaleDetailsChart> findGoodsSaledetailsChart();
 }

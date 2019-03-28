@@ -291,6 +291,11 @@
          */
         function count() {
             window.location = "goodsSaleDetailsByPrice1000";
+        }/**
+         导出饼图
+         */
+        function exportChart() {
+            window.location.href = "findGoodsSaledetailsChart";
         }
     </script>
 </head>
@@ -362,6 +367,9 @@
 </form>
 <div style="margin-left: 373px;">
 <tr>
+    <td>
+        <input type="button"  name="" value="导出饼图" style="margin-left: 100px;border: 1px solid lightskyblue;text-align: center;width: 80px"onclick="exportChart()">
+    </td>
     <td>
         <input id="save" type="button" value="保存"  onclick="save()">
     </td>

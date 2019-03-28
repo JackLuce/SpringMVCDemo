@@ -6,6 +6,7 @@ import com.daoimpl.GoodsDaoImpl;
 import com.daoimpl.SaleDetailDaoImpl;
 import com.entity.Goods;
 import com.entity.GoodsSaleDetails;
+import com.entity.GoodsSaleDetailsChart;
 import com.entity.SaleDetail;
 import com.service.GoodsService;
 import com.service.SaleDetailService;
@@ -73,6 +74,13 @@ public class JDBCTest {
 		List<GoodsSaleDetails> gList  =saleDetailService.findAllOf();
 		for (GoodsSaleDetails goodsSaleDetails : gList) {
 			System.out.println(goodsSaleDetails);
+		}
+	}
+    @org.junit.Test
+	public void test9() {
+		List<GoodsSaleDetailsChart> goodsSaleDetailsChartList = goodsService.findGoodsSaledetailsChart();
+		for (GoodsSaleDetailsChart GoodsSaleDetailsChart : goodsSaleDetailsChartList) {
+			System.out.println(GoodsSaleDetailsChart);
 		}
 	}
 }

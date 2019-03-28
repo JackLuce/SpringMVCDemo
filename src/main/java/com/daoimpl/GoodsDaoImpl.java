@@ -10,6 +10,7 @@ import java.util.List;
 import com.dao.GoodsDao;
 import com.entity.Goods;
 import com.entity.GoodsSaleDetails;
+import com.entity.GoodsSaleDetailsChart;
 import com.entity.SaleDetail;
 import com.util.JDBCUtil;
 
@@ -214,6 +215,29 @@ public class GoodsDaoImpl implements GoodsDao{
 		}
 		jdbcUtil.close(stmt, con);
 		return 0;
+	}
+
+	@Override
+	public List<GoodsSaleDetailsChart> findGoodsSaledetailsChart() {
+		List<GoodsSaleDetailsChart> list =new ArrayList<GoodsSaleDetailsChart>();
+		String sql = "select g.`name` as name , SUM(s.number) as sumnumber,SUM(s.subtotal) as sumtotal from sale_detail as s LEFT JOIN goods as g \n" +
+				"ON g.id = s.goodsno GROUP BY g.`name`";
+		try {
+			stmt = con.prepareStatement(sql);
+			rsult = stmt.executeQuery();
+			while (rsult.next()) {
+				GoodsSaleDetailsChart saleDetailsChart = new GoodsSaleDetailsChart();
+				saleDetailsChart.setName(rsult.getString("name"));
+				saleDetailsChart.setSumNumber(rsult.getLong("sumnumber"));
+				saleDetailsChart.setSumSubTotal(rsult.getLong("sumtotal"));
+				list.add(saleDetailsChart);
+			}
+			return list;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		jdbcUtil.close(stmt, con);
+		return null;
 	}
 
 

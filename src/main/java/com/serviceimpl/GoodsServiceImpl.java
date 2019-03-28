@@ -6,6 +6,7 @@ import com.dao.GoodsDao;
 import com.daoimpl.GoodsDaoImpl;
 import com.entity.Goods;
 import com.entity.GoodsSaleDetails;
+import com.entity.GoodsSaleDetailsChart;
 import com.service.GoodsService;
 
 public class GoodsServiceImpl implements GoodsService{
@@ -26,6 +27,11 @@ public class GoodsServiceImpl implements GoodsService{
 
 	public int delete(Goods goods) {
 		return goodsDao.delete(goods);
+	}
+
+	@Override
+	public List<GoodsSaleDetailsChart> findGoodsSaledetailsChart() {
+		return goodsDao.findGoodsSaledetailsChart();
 	}
 
 	@Override

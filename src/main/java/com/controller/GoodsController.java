@@ -1,15 +1,18 @@
 package com.controller;
 
-import com.entity.Goods;
-import com.entity.GoodsSaleDetails;
-import com.entity.GoodsSaleDetailsExcel;
-import com.entity.SaleDetail;
+import com.entity.*;
 import com.service.GoodsService;
 import com.service.SaleDetailService;
 import com.serviceimpl.GoodsServiceImpl;
 import com.serviceimpl.SaleDetailServiceImpl;
 import com.util.ExcelUtil;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartUtilities;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PiePlot3D;
+import org.jfree.chart.title.TextTitle;
+import org.jfree.data.general.DefaultPieDataset;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -18,10 +21,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.BufferedOutputStream;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.PrintWriter;
+import java.awt.*;
+import java.io.*;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -223,6 +224,55 @@ public class GoodsController {
             out.close();
         }*/
         return fileName;
+    }
+
+    /**
+     * 绘制饼图
+     * @return
+     */
+    @ResponseBody
+    @RequestMapping("/findGoodsSaledetailsChart")
+    public String findGoodsSaledetailsChart(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+        //获取数据集
+        DefaultPieDataset data = new DefaultPieDataset();
+        List<GoodsSaleDetailsChart> goodsSaleDetailsChartList = goodsService.findGoodsSaledetailsChart();
+        for (GoodsSaleDetailsChart goodsChart : goodsSaleDetailsChartList) {
+            System.out.println("-------"+goodsChart);
+            data.setValue(goodsChart.getName(),goodsChart.getSumNumber());
+        }
+        JFreeChart chart = ChartFactory.createPieChart3D("商品销量图", // 图表标题
+                data, // 数据集
+                true, // 是否显示图例(对于简单的柱状图必须是 false)
+                false, // 是否生成工具
+                false // 是否生成 URL 链接
+        );
+
+        //中文乱码
+        PiePlot3D plot = (PiePlot3D) chart.getPlot();
+        plot.setLabelFont(new Font("黑体", Font.PLAIN, 20));
+        TextTitle textTitle = chart.getTitle();
+        textTitle.setFont(new Font("黑体", Font.PLAIN, 20));
+        chart.getLegend().setItemFont(new Font("宋体", Font.PLAIN, 12));
+
+        // 写图表对象到文件，参照柱状图生成源码
+        FileOutputStream fos_jpg = null;
+        try {
+            fos_jpg = new FileOutputStream("E:\\商品销量3DChart"+System.currentTimeMillis()+".jpg");
+            ChartUtilities.writeChartAsJPEG(fos_jpg, 1.0f, chart, 400, 300,
+                    null);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try {
+//                request.getRequestDispatcher("showGoods").forward(request, response);
+                response.sendRedirect("showGoods");
+                fos_jpg.close();
+            } catch (Exception e) {
+            }
+        }
+        return "";
     }
 
     public List<Goods> getListGoods() {
