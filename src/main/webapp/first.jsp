@@ -28,7 +28,7 @@
             var goodsNameOptions = goodsName.options;
             var priceOptions = price.options;
             //table新增一行  拼接
-            var trTable = "<tr><td><input type="+'"checkbox"'+" id="+'"id"'+" name="+'"id"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td><select id="+'"GoodsName"'+" name="+'"GoodsName"'+" class="+'"GoodsName"'+" onchange="+'"toGoodsPrice(this)"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></select></td><td><select id="+'"SelectPrice"'+iCnt+" name="+'"SelectPrice"'+iCnt+" class="+'"SelectPrice"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+">${goods.price}</select></td><td><input type="+'"text"'+" id="+'"goodsNumber"'+" name="+'"goodsNumber"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"onchange="+'"myMathFunction(this)"'+"></td><td><input type="+'"text"'+" id="+'"goodsSubTotal"'+" name="+'"goodsSubTotal"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td></td></tr>";
+            var trTable = "<tr><td><input type="+'"checkbox"'+" id="+'"id"'+" name="+'"id"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td><select id="+'"GoodsName"'+" name="+'"GoodsName"'+" class="+'"GoodsName"'+" onchange="+'"toGoodsPrice(this)"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></select></td><td><select disabled id="+'"SelectPrice"'+" name="+'"SelectPrice"'+" class="+'"SelectPrice"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+">${goods.price}</select></td><td><input type="+'"text"'+" id="+'"goodsNumber"'+" name="+'"goodsNumber"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"onchange="+'"myMathFunction(this)"'+"></td><td><input type="+'"text"'+" id="+'"goodsSubTotal"'+" name="+'"goodsSubTotal"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td></td></tr>";
             var  xx = $(trTable);
             //table 结尾新增一行
             $("#myTable").append(xx);
@@ -217,6 +217,7 @@
             //获取商品数量
             // var goodsNumber=document.getElementById("goodsNumber").value;根据id获取
             var goodsNumber=$(tr).find("input[name='goodsNumber']").val();
+
             /**
              * 如果GoodsName，goodsPrice为-1提示选择商品不计算小计
              */
@@ -342,7 +343,7 @@
                 </select>
             </td>
             <td>
-                <select name="SelectPrice" id= "SelectPrice" style="border: 1px solid lightskyblue;text-align: center;width: 82px">
+                <select disabled name="SelectPrice" id= "SelectPrice" style="border: 1px solid lightskyblue;text-align: center;width: 82px">
                     <c:forEach items="${listGoods}" var="goods">
                         <option id="goodsPrice" name = "goodsPrice">${goods.price}</option>
                     </c:forEach>
