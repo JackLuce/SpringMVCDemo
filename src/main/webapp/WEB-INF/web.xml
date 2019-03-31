@@ -37,6 +37,12 @@
     <url-pattern>*.do</url-pattern>
   </filter-mapping>
 
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      classpath:SpringMVC.xml
+    </param-value>
+  </context-param>
   <!--SpringMVC-->
   <servlet>
     <servlet-name>SpringMVC</servlet-name>
@@ -45,7 +51,6 @@
       <param-name>contextConfigLocation</param-name>
         <param-value>
             classpath:SpringMVC.xml
-            classpath:struts.xml
         </param-value>
     </init-param>
   </servlet>
