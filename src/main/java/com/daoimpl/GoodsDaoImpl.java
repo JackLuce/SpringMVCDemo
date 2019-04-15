@@ -16,12 +16,12 @@ import com.util.JDBCUtil;
 
 public class GoodsDaoImpl implements GoodsDao{
 	
-	private static JDBCUtil jdbcUtil = new JDBCUtil();
-	private static Connection con = jdbcUtil.load();
-	private static PreparedStatement stmt=null;
-	private static ResultSet rsult = null;
+	private  JDBCUtil jdbcUtil = new JDBCUtil();
+	private  PreparedStatement stmt=null;
+	private  ResultSet rsult = null;
 	@Override
 	public List<GoodsSaleDetails> findByPrice() {
+		Connection con = jdbcUtil.load();
 		List<GoodsSaleDetails> goodsSaleDetails  = new ArrayList<GoodsSaleDetails>();
 		
 		String sql  = "select g.*,s.* from goods as g left join sale_detail as s on g.id = s.goodsno where g.price >1000";
@@ -46,8 +46,8 @@ public class GoodsDaoImpl implements GoodsDao{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
+			jdbcUtil.close(rsult,stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return null;
 	}
 	/**
@@ -55,12 +55,13 @@ public class GoodsDaoImpl implements GoodsDao{
 	 */
 	@Override
 	public Goods findByName(String name) {
+		Connection con = jdbcUtil.load();
 			Goods goods = new Goods();
 			String sql ="select * from goods where name =?"; 
 			try { 
 				stmt = con.prepareStatement(sql);
 				stmt.setString(1, name); 
-				ResultSet rsult = stmt.executeQuery(); 
+				rsult = stmt.executeQuery();
 				while (rsult.next()) {
 					goods.setId(rsult.getInt("id"));
 					goods.setName(rsult.getString("name"));
@@ -70,21 +71,22 @@ public class GoodsDaoImpl implements GoodsDao{
 		  } catch (SQLException e) {
 		  e.printStackTrace(); 
 		  } finally {
+				jdbcUtil.close(rsult,stmt, con);
 			}
-			jdbcUtil.close(stmt, con);
-			return null; 
+			return null;
 	}
 	/**
 	 * 根据id查找
 	 */
 	@Override
-	  public Goods findByID(int id) { 
+	  public Goods findByID(int id) {
+		Connection con = jdbcUtil.load();
 		Goods goods = new Goods();
 		String sql ="select * from goods where id =?"; 
 		try { 
 			stmt = con.prepareStatement(sql);
 			stmt.setInt(1, id); 
-			ResultSet rsult = stmt.executeQuery(); 
+			rsult = stmt.executeQuery();
 			while (rsult.next()) {
 				goods.setId(rsult.getInt("id"));
 				goods.setName(rsult.getString("name"));
@@ -94,21 +96,24 @@ public class GoodsDaoImpl implements GoodsDao{
 	  } catch (SQLException e) {
 	  e.printStackTrace(); 
 	  } finally {
-		}
-		jdbcUtil.close(stmt, con);
-		return null; 
+			jdbcUtil.close(rsult,stmt, con);
+	  }
+		return null;
 	  }
 	/**
 	 * findIDByName
+	 * @param name
+	 * @return
 	 */
 	@Override
 	public Goods findIDByName(String name) {
+		Connection con = jdbcUtil.load();
 		Goods goods = new Goods();
 		String sql ="select * from goods where name =?";
 		try { 
 			stmt = con.prepareStatement(sql);
 			stmt.setString(1, name);
-			ResultSet rsult = stmt.executeQuery(); 
+			rsult = stmt.executeQuery();
 			while (rsult.next()) {
 				goods.setId(rsult.getInt("id"));
 				goods.setName(rsult.getString("name"));
@@ -118,14 +123,15 @@ public class GoodsDaoImpl implements GoodsDao{
 	  } catch (SQLException e) {
 	  e.printStackTrace(); 
 	  } finally {
+			jdbcUtil.close(rsult,stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
-		return null; 
+		return null;
 	}
 	/**
 	 * 查询所有
 	 */
 	public List<Goods> findAll() {
+		Connection con = jdbcUtil.load();
 		List<Goods> list =new ArrayList<Goods>();
 		String sql = "select * from goods";
 		try {
@@ -141,8 +147,9 @@ public class GoodsDaoImpl implements GoodsDao{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally {
+			jdbcUtil.close(rsult,stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return null;
 	}
 
@@ -150,6 +157,7 @@ public class GoodsDaoImpl implements GoodsDao{
 	 * 添加
 	 */
 	public int insert(List<Goods> goodses) {
+		Connection con = jdbcUtil.load();
 		int num = goodses.size();
 		int result  = 0;
 		int number  = 0;
@@ -172,8 +180,8 @@ public class GoodsDaoImpl implements GoodsDao{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
+			jdbcUtil.close(stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return 0;
 	}
 
@@ -181,6 +189,7 @@ public class GoodsDaoImpl implements GoodsDao{
 	 * 更新
 	 */
 	public int update(Goods goods) {
+		Connection con = jdbcUtil.load();
 		String sql = "update goods set name = ?,price = ? where id = ?";
 		try {
 			stmt = con.prepareStatement(sql);
@@ -193,8 +202,8 @@ public class GoodsDaoImpl implements GoodsDao{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
+			jdbcUtil.close(stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return 0;
 	}
 
@@ -202,6 +211,7 @@ public class GoodsDaoImpl implements GoodsDao{
 	 * 删除
 	 */
 	public int delete(Goods goods) {
+		Connection con = jdbcUtil.load();
 		String sql = "delete from goods where id = ?";
 		try {
 			stmt = con.prepareStatement(sql);
@@ -212,13 +222,14 @@ public class GoodsDaoImpl implements GoodsDao{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
+			jdbcUtil.close(stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return 0;
 	}
 
 	@Override
 	public List<GoodsSaleDetailsChart> findGoodsSaledetailsChart() {
+		Connection con = jdbcUtil.load();
 		List<GoodsSaleDetailsChart> list =new ArrayList<GoodsSaleDetailsChart>();
 		String sql = "select g.`name` as name , SUM(s.number) as sumnumber,SUM(s.subtotal) as sumtotal from sale_detail as s LEFT JOIN goods as g \n" +
 				"ON g.id = s.goodsno GROUP BY g.`name`";
@@ -235,8 +246,9 @@ public class GoodsDaoImpl implements GoodsDao{
 			return list;
 		} catch (SQLException e) {
 			e.printStackTrace();
+		}finally {
+			jdbcUtil.close(rsult,stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return null;
 	}
 

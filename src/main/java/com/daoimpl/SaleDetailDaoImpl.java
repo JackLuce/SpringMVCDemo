@@ -15,19 +15,19 @@ import com.util.JDBCUtil;
 
 public class SaleDetailDaoImpl implements SaleDetailDao{
 
-	private static JDBCUtil jdbcUtil = new JDBCUtil();
-	private static Connection con = jdbcUtil.load();
-	private static PreparedStatement stmt=null;
-	private static ResultSet rsult = null;
+	private  JDBCUtil jdbcUtil = new JDBCUtil();
+	private  PreparedStatement stmt=null;
+	private  ResultSet rsult = null;
 	
 	@Override
 	public SaleDetail findByID(int id) {
+		Connection con = jdbcUtil.load();
 		SaleDetail saleDetail = new SaleDetail();
 		String sql ="select * from sale_detail where goodsno =?"; 
 		try { 
 			stmt = con.prepareStatement(sql);
 			stmt.setInt(1, id); 
-			ResultSet rsult = stmt.executeQuery(); 
+			rsult = stmt.executeQuery();
 			while (rsult.next()) {
 				saleDetail.setSaleNo(rsult.getLong("saleNo"));
 				saleDetail.setGoodsNo(rsult.getInt("goodsNo"));
@@ -38,14 +38,15 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 		} catch (SQLException e) {
 			  e.printStackTrace(); 
 		  }finally {
-			} 
-		jdbcUtil.close(stmt, con);
+			jdbcUtil.close(rsult,stmt, con);
+		}
 		return null;
 	}
 	/***
 	 * 查询所有
 	 */
 	public List<SaleDetail> findAll() {
+		Connection con = jdbcUtil.load();
 		 List<SaleDetail> list = new ArrayList<SaleDetail>();
 		 String sql = "select * from sale_detail";
 				try {
@@ -63,8 +64,8 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 				} catch (SQLException e) {
 					e.printStackTrace();
 				}finally {
+					jdbcUtil.close(rsult,stmt, con);
 				}
-				jdbcUtil.close(stmt, con);
 				return null;
 	}
 
@@ -72,6 +73,7 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 	 * 添加
 	 */
 	public int insert(List<SaleDetail> saleDetails) {
+		Connection con = jdbcUtil.load();
 		int num = saleDetails.size();
 		int result  = 0;
 		int insertNumber = 0;
@@ -92,8 +94,8 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
+			jdbcUtil.close(stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return 0;
 	}
 
@@ -101,6 +103,7 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 	 * 更新
 	 */
 	public int update(SaleDetail saleDetail) {
+		Connection con = jdbcUtil.load();
 		String sql = "update sale_detail set saleNo = ?,number = ?,subTotal = ? where goodsNo = ?";
 		try {
 			stmt = con.prepareStatement(sql);
@@ -109,13 +112,13 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 			stmt.setDouble(3, saleDetail.getSubTotal());
 			stmt.setInt(4,saleDetail.getGoodsNo() );
 			
-			int result = stmt.executeUpdate();
-			return result;
+			int resultNum = stmt.executeUpdate();
+			return resultNum;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
+			jdbcUtil.close(stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return 0;
 	}
 
@@ -123,18 +126,19 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 	 * 删除
 	 */
 	public int delete(SaleDetail saleDetail) {
+		Connection con = jdbcUtil.load();
 		String sql = "delete from sale_detail where goodsNo = ?";
 		try {
 			stmt = con.prepareStatement(sql);
 			stmt.setInt(1,saleDetail.getGoodsNo());
 
-			int result = stmt.executeUpdate();
-			return result;
+			int resultNum = stmt.executeUpdate();
+			return resultNum;
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
+			jdbcUtil.close(stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return 0;
 	}
 	/**
@@ -143,6 +147,7 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 	 */
 	@Override
 	public List<GoodsSaleDetails> findAllOf() {
+		Connection con = jdbcUtil.load();
 		 List<GoodsSaleDetails> goodsSaleDetailsList = new  ArrayList<GoodsSaleDetails>();
 		String sql = "select * from goods as g left join sale_detail as s on g.id  = s.goodsno ";
 		try {
@@ -168,8 +173,8 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}finally {
+			jdbcUtil.close(rsult,stmt, con);
 		}
-		jdbcUtil.close(stmt, con);
 		return null;
 	}
 

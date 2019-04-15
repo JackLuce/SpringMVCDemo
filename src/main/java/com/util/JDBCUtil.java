@@ -1,18 +1,18 @@
 package com.util;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class JDBCUtil {
 	private static String mysqlName="com.mysql.jdbc.Driver";
 	private static String url="jdbc:mysql://localhost:3306/jrtest?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
 	private static String userName = "root";
 	private static String password="root";
+
 	private static Connection con=null;
-	private static PreparedStatement stmt=null;
-	
+//	private static PreparedStatement stmt=null;
+// static修饰connection在一个类中被共享，
+// 在多线程的环境中，使用单个（static）connection会引起事务的混乱
+
 	public static  Connection load() {
 		try {
 			Class.forName(mysqlName);
@@ -28,23 +28,46 @@ public class JDBCUtil {
 		}
 		return con;
 	}
-	
-	public void close(PreparedStatement stmt,Connection con) {
-		/*
-		 * if(stmt!=null) { try { stmt.close(); } catch (SQLException e1) {
-		 * e1.printStackTrace(); } if(con!=null) { try { con.close(); } catch
-		 * (SQLException e) { e.printStackTrace(); } } }
-		 */
-		 try {
-	            if(stmt !=null)stmt.close();
-	        } catch (Exception e) {
-	        	e.printStackTrace();
-	        }
 
-	        try {
-	            if(con !=null)con.close();
-	        } catch (Exception e) {
-	        	e.printStackTrace();
-	        }
+	/**
+	 * 关闭数据库
+	 * @param resultSet
+	 * @param stmt
+	 * @param con
+	 */
+	public static void close(ResultSet resultSet, PreparedStatement stmt, Connection con) {
+			try {
+				if(resultSet !=null)resultSet.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if(stmt !=null)stmt.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			try {
+				if(con !=null)con.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+	}
+
+	/**
+	 * 关闭数据库
+	 * @param stmt
+	 * @param con
+	 */
+	public static void close(PreparedStatement stmt, Connection con) {
+		try {
+			if(stmt !=null)stmt.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		try {
+			if(con !=null)con.close();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 }
