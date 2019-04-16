@@ -29,7 +29,7 @@
             var goodsNameOptions = goodsName.options;
             var priceOptions = price.options;
             //table新增一行  拼接  +"selected="+'"selected"'
-            var trTable = "<tr><td><input type="+'"checkbox"'+" id="+'"id"'+" name="+'"id"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td><select id="+'"selectGoodsName"'+" name="+'"selectGoodsName"'+" class="+'"GoodsName"'+"selected="+'"selected"'+" onchange="+'"toGoodsPrice(this)"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></select></td><td><select disabled id="+'"SelectPrice"'+" name="+'"SelectPrice"'+" class="+'"SelectPrice"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+">${goods.price}</select></td><td><input type="+'"text"'+" id="+'"goodsNumber"'+" name="+'"goodsNumber"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"onchange="+'"myMathFunction(this)"'+"></td><td><input type="+'"text"'+" id="+'"goodsSubTotal"'+" name="+'"goodsSubTotal"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td></td></tr>";
+            var trTable = "<tr><td><input type="+'"checkbox"'+" id="+'"id"'+" name="+'"id"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td><select id="+'"selectGoodsName"'+" name="+'"selectGoodsName"'+" class="+'"GoodsName"'+"selected="+'"selected"'+" onchange="+'"toGoodsPrice(this)"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></select></td><td><select disabled id="+'"SelectPrice"'+" name="+'"SelectPrice"'+" class="+'"SelectPrice"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+">${goods.price}</select></td><td><input type="+'"text"'+" id="+'"goodsNumber"'+" name="+'"goodsNumber"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"onchange="+'"myMathFunction(this)"'+"></td><td><input type="+'"text"'+" id="+'"goodsSubTotal"'+" name="+'"goodsSubTotal"'+"disabled style="+'"text-align: center;border: 1px solid lightskyblue;width: 120px;background:#F4A460"'+"></td><td></td></tr>";
             var  xx = $(trTable);
             //table 结尾新增一行
             $("#myTable").append(xx);
@@ -152,6 +152,7 @@
                     var goodsPrice=document.getElementById("goodsPrice").value;
                     if (response!="") {
                         goodsPrice = price;
+                        var tr ;
                         // alert(iCnt+"行");  添加了几行
                         // var SelectPrice = document.getElementById('SelectPrice');
                         // alert("SelectPrice个数-----"+SelectPrice.length);
@@ -162,8 +163,8 @@
                          * */
                         $("option[name='GoodsName']:selected").each(function () {//被选中时each操作
                             // alert("当前商品名称--->"+this.value+",正确价格--->"+price);
-                            trNum = $(this).parents("tr").index();//开始下标
-                            tdNum = $(this).parents("td").index();//开始下标
+                            trNum = $(this).parents("tr").index();
+                            tdNum = $(this).parents("td").index();
                             // alert("第"+trNum+"行，第"+tdNum+"列");
                             // alert("第"+trNum+"行，第"+(++tdNum)+"列");
                             //当前行的下一列
@@ -172,12 +173,19 @@
                              * 为当前行的对应下拉框赋值
                              * */
                             //获取上上级tr 的demo
-                            var tr = obj.parentNode.parentNode;
+                             tr= obj.parentNode.parentNode;
                             //通过find()方法获取tr行中字段值
                             // var ss=$(tr).find("select[name='SelectPrice']").val();
                             // alert(ss+"--->tr行中字段值");
                             $(tr).find("select[name='SelectPrice']").val(goodsPrice);
                         });
+                        //获取商品数量
+                        var goodsNumber=$(tr).find("input[name='goodsNumber']").val();
+                        //如果商品数量大于0，调用小计方法
+                        if(goodsNumber>0){
+                            myMathFunction(obj);
+                        }
+
                     } else {
                         location.href = "error.jsp";
                     }
@@ -188,31 +196,46 @@
          删除所选行
          */
         function deleteSelectedRow(rowID) {
-            if ($("input[name='id']:checked").length>0){
-                var con = confirm("确定删除所选行吗？");
-                // alert(con);
-                if (con == false) {
-                    //取消删除，取消checkbox选中
-                    $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
-                        n = $(this).parents("tr").index();
-                        var boxes = document.getElementsByName("id");
-                        for (var i=0;i<boxes.length;i++){
-                            boxes[i].checked = false;
-                        }
-                    });
-                }else {
-                    $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
-                        n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
-                        $("table#myTable").find("tr:eq("+n+")").remove();
-                    });
+            //tr行数
+            var trNum = $("#myTable").find("tr").length;
+            if(trNum<=2){
+                //取消删除，取消checkbox选中
+                $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
+                    n = $(this).parents("tr").index();
+                    var boxes = document.getElementsByName("id");
+                    for (var i=0;i<boxes.length;i++){
+                        boxes[i].checked = false;
+                    }
+                    alert("源数据不可删！");
+                });
+            }else {
+                if ($("input[name='id']:checked").length>0){
+                    var con = confirm("确定删除所选行吗？");
+                    var n = 0;
+                    // alert(con);
+                    if (con == false) {
+                        //取消删除，取消checkbox选中
+                        $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
+                            n = $(this).parents("tr").index();
+                            var boxes = document.getElementsByName("id");
+                            for (var i=0;i<boxes.length;i++){
+                                boxes[i].checked = false;
+                            }
+                        });
+                    }else {
+                        $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
+                            n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
+                            $("table#myTable").find("tr:eq("+n+")").remove();
+                        });
 
-                    //调用合计方法 重新计算合计
-                    TotalPrice();
+                        //调用合计方法 重新计算合计
+                        TotalPrice();
 
-                    $("#" + rowID).remove();
-                }
-            } else {
+                        $("#" + rowID).remove();
+                    }
+                } else {
                     alert("请选择要删除的数据！");
+                }
             }
         }
         /**
@@ -247,23 +270,31 @@
             //获取商品数量
             // var goodsNumber=document.getElementById("goodsNumber").value;根据id获取
             var goodsNumber=$(tr).find("input[name='goodsNumber']").val();
+            //合计
+            var SubTotal ;
 
-            /**
-             * 如果GoodsName，goodsPrice为-1提示选择商品不计算小计
-             */
-            if(GoodsName=="-1"||goodsPrice=="-1"){
-                alert("请先选择商品！");
-                $(tr).find("input[name='goodsNumber']").val('');//置空商品数量
+            var reg =/^\+?[1-9][0-9]*$/;
+            if(!reg.test(goodsNumber)){
+                alert("请输入大于0的整数！");
+                $(tr).find("input[name='goodsNumber']").val('');
+                $(tr).find("input[name='goodsSubTotal']").val('');
             }else {
-                //商品小计等于数量乘以价格
-                $(tr).find("input[name='goodsSubTotal']").val((goodsNumber)*(goodsPrice));
-
-                // var goodsSubTotal=$(tr).find("input[name='goodsSubTotal']").val();
-                // alert("价格："+goodsPrice+"数量"+goodsNumber+"小计"+goodsSubTotal);
-                // var goodsSubTotal=document.getElementById("goodsSubTotal");根据id获取
-
-                //调用合计方法
-                TotalPrice();
+                /**
+                 * 如果GoodsName，goodsPrice为-1提示选择商品不计算小计
+                 */
+                if(GoodsName=="-1"||goodsPrice=="-1"){
+                    alert("请先选择商品！");
+                    $(tr).find("input[name='goodsNumber']").val('');//置空商品数量
+                }else {
+                        //商品小计等于数量乘以价格
+                        SubTotal = (goodsNumber)*(goodsPrice);
+                        $(tr).find("input[name='goodsSubTotal']").val(SubTotal);
+                    // var goodsSubTotal=$(tr).find("input[name='goodsSubTotal']").val();
+                    // alert("价格："+goodsPrice+"数量"+goodsNumber+"小计"+goodsSubTotal);
+                    // var goodsSubTotal=document.getElementById("goodsSubTotal");根据id获取
+                    //调用合计方法
+                    TotalPrice();
+                }
             }
         }
         /**
@@ -346,7 +377,7 @@
         <input id="deleteTable"  type="button" value="删除选中的行" onclick="deleteSelectedRow(this)" style="width: 100px"/>
     </td>
     <td>
-        <a style="margin-left: 25px">合计：</a><input id="SubTotal" type="text" disabled>
+        <a style="margin-left: 65px">合计：</a><input id="SubTotal" style="background:#F4A460" type="text" disabled>
     </td>
 </tr>
 </div>
@@ -367,12 +398,12 @@
                 <input type="text" value="数量" style="text-align: center;width: 80px" disabled="disabled">
             </td>
             <td>
-                <input type="text" value="小计" style="text-align: center;width: 80px" disabled="disabled">
+                <input type="text" value="小计" style="text-align: center;width: 120px" disabled="disabled">
             </td>
         </tr>
         <tr>
             <td>
-                <input type="checkbox" id="id" name="" value="${goods.id}" disabled style="border: 1px solid lightskyblue;text-align: center;width: 66px">
+                <input type="checkbox" id="id" name="id" value="${goods.id}"  style="border: 1px solid lightskyblue;text-align: center;width: 66px">
             </td>
             <td>
                 <select name="selectGoodsName" id = "selectGoodsName" class="selectGoodsName"  onchange="toGoodsPrice(this)" style="border: 1px solid lightskyblue;text-align: center;width: 82px">
@@ -390,10 +421,10 @@
             </td>
 
             <td>
-                <input type="text" id="goodsNumber" name="goodsNumber"  value="" style="border: 1px solid lightskyblue;text-align: center;width: 80px" onchange="myMathFunction(this)">
+                <input type="text" id="goodsNumber" name="goodsNumber"  value="" style="border: 1px solid lightskyblue;text-align: center;width: 80px" onchange="myMathFunction(this)"><%--background: #1E9FFF--%>
             </td>
             <td>
-                <input type="text" id="goodsSubTotal" name="goodsSubTotal"  value="" style="border: 1px solid lightskyblue;text-align: center;width: 80px">
+                <input type="text" id="goodsSubTotal" name="goodsSubTotal" disabled value="" style="border: 1px solid lightskyblue;text-align: center;width: 120px;background: #F4A460">
             </td>
 
         </tr>
