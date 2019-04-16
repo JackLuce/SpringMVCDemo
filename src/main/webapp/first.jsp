@@ -18,7 +18,7 @@
     <script>
         var iCnt = 0;
         /**  新增一行js function  */
-        function addTable() {
+        function addTable(obj) {
             //获取后台返回页面下拉框的值
             var goodsName = document.getElementById('selectGoodsName');
             var price = document.getElementById('SelectPrice');
@@ -28,8 +28,8 @@
             //select 下拉框中的options 值
             var goodsNameOptions = goodsName.options;
             var priceOptions = price.options;
-            //table新增一行  拼接
-            var trTable = "<tr><td><input type="+'"checkbox"'+" id="+'"id"'+" name="+'"id"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td><select id="+'"GoodsName"'+" name="+'"GoodsName"'+" class="+'"GoodsName"'+" onchange="+'"toGoodsPrice(this)"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></select></td><td><select disabled id="+'"SelectPrice"'+" name="+'"SelectPrice"'+" class="+'"SelectPrice"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+">${goods.price}</select></td><td><input type="+'"text"'+" id="+'"goodsNumber"'+" name="+'"goodsNumber"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"onchange="+'"myMathFunction(this)"'+"></td><td><input type="+'"text"'+" id="+'"goodsSubTotal"'+" name="+'"goodsSubTotal"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td></td></tr>";
+            //table新增一行  拼接  +"selected="+'"selected"'
+            var trTable = "<tr><td><input type="+'"checkbox"'+" id="+'"id"'+" name="+'"id"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td><select id="+'"selectGoodsName"'+" name="+'"selectGoodsName"'+" class="+'"GoodsName"'+"selected="+'"selected"'+" onchange="+'"toGoodsPrice(this)"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></select></td><td><select disabled id="+'"SelectPrice"'+" name="+'"SelectPrice"'+" class="+'"SelectPrice"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+">${goods.price}</select></td><td><input type="+'"text"'+" id="+'"goodsNumber"'+" name="+'"goodsNumber"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"onchange="+'"myMathFunction(this)"'+"></td><td><input type="+'"text"'+" id="+'"goodsSubTotal"'+" name="+'"goodsSubTotal"'+" style="+'"text-align: center;border: 1px solid lightskyblue;width: 80px"'+"></td><td></td></tr>";
             var  xx = $(trTable);
             //table 结尾新增一行
             $("#myTable").append(xx);
@@ -56,7 +56,36 @@
                     // jQuery(".GoodsName").append("<option value="+tmp+">"+tmp+"</option>");
                 });
                 //将options添加到select中
+                // debugger;
+                /**
+                 * 选中值后再添加一行数据不清空
+                 */
+                /* -------start---------*/
+                // var GoodsNameSelected = document.getElementById('selectGoodsName');//selectGoodsName select标签的id
+                // alert(GoodsNameSelected.value.trim())
+                var trNum = $("#myTable").find("tr").length;
+                var SGoodsName = '';
+                var SPrice = '';
+                //修改商品名称的 class属性值  因为商品名称options是通过.class属性值添加的
+                // GoodsName.html(nameOpt);会覆盖选中的值
+                $(".GoodsName").attr("class","blue");
+                $(".SelectPrice").attr("class","blue");
+                for(var i=1;i<trNum;i++){
+                    SGoodsName = $("table#myTable").find("tr:eq("+i+")").find("select[name='selectGoodsName']").val();
+                    SPrice = $("table#myTable").find("tr:eq("+i+")").find("select[name='SelectPrice']").val();
+                    // alert("第"+i+"行中字段值：商品名称--->"+SGoodsName+",商品价格--->"+SPrice);
+                    if(SGoodsName=="-1"||SGoodsName==undefined){
+                        // alert("第"+i+"行，unselected!");
+                    }else {
+                        // alert("第"+i+"行，selected："+SGoodsName+","+SPrice);
+                        // debugger;
+                        $("table#myTable").find("tr:eq("+i+")").find("select[id='selectGoodsName']").val(SGoodsName);
+                        $("table#myTable").find("tr:eq("+i+")").find("select[id='SelectPrice']").val(SPrice);
+                    }
+                }
+                /* -------end---------*/
                 GoodsName.html(nameOpt);
+                // debugger;
                 /* GoodsPrice  下拉框  */
                 for(var i = 0; i < priceLength; i++){
                     //如果原有select没有值则初始化新增select
@@ -133,8 +162,8 @@
                          * */
                         $("option[name='GoodsName']:selected").each(function () {//被选中时each操作
                             // alert("当前商品名称--->"+this.value+",正确价格--->"+price);
-                            trNum = $(this).parents("tr").index();
-                            tdNum = $(this).parents("td").index();
+                            trNum = $(this).parents("tr").index();//开始下标
+                            tdNum = $(this).parents("td").index();//开始下标
                             // alert("第"+trNum+"行，第"+tdNum+"列");
                             // alert("第"+trNum+"行，第"+(++tdNum)+"列");
                             //当前行的下一列
@@ -257,6 +286,9 @@
                     goodsSubTotal+=$(this).parents("tr").find("#goodsSubTotal").val() + ',';
                     if($(this).parents("tr").find("#goodsNumber").val()==""||$(this).parents("tr").find("#goodsNumber").val()==null){
                         alert("请选择商品数量！！！");
+                        return false;
+                        //return false终止循环
+                        //return true,跳出循环，进入下一次循环，跟函数返回值无关
                     }
                 });
                 /*alert(name);
@@ -292,7 +324,8 @@
          */
         function count() {
             window.location = "goodsSaleDetailsByPrice1000";
-        }/**
+        }
+        /**
          导出饼图
          */
         function exportChart() {
@@ -307,7 +340,7 @@
 <div style="margin-left: 373px;margin-top: 20px;">
 <tr >
     <td>
-        <input id="addTable" type="button" value="增加一行" onclick="addTable()" style="width: 80px"/>
+        <input id="addTable" type="button" value="增加一行" onclick="addTable(this)" style="width: 80px"/>
     </td>
     <td>
         <input id="deleteTable"  type="button" value="删除选中的行" onclick="deleteSelectedRow(this)" style="width: 100px"/>
@@ -342,7 +375,7 @@
                 <input type="checkbox" id="id" name="" value="${goods.id}" disabled style="border: 1px solid lightskyblue;text-align: center;width: 66px">
             </td>
             <td>
-                <select name="selectGoodsName" id = "selectGoodsName"  onchange="toGoodsPrice(this)" style="border: 1px solid lightskyblue;text-align: center;width: 82px">
+                <select name="selectGoodsName" id = "selectGoodsName" class="selectGoodsName"  onchange="toGoodsPrice(this)" style="border: 1px solid lightskyblue;text-align: center;width: 82px">
                     <c:forEach items="${listGoods}" var="goods">
                         <option name="GoodsName" value="${goods.name}">${goods.name}</option>
                     </c:forEach>

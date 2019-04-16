@@ -38,13 +38,14 @@ public class JDBCTest {
 		Goods goods = new Goods();
 		goods.setId(66);
 		goods.setName("fff");
-		goods.setPrice(100.00);
+		goods.setPrice(999999.00);
 		goodses.add(goods);
+		goodsService.delete(goods);
 		int result = goodsService.insert(goodses);
 		System.out.println(result);
-		goods.setName("改名");
+		goods.setName("大象");
 		int res = goodsService.update(goods);
-		System.out.println(res+"update");
+		System.out.println(res+"--update");
 	}
     @org.junit.Test
 	public void test3() {

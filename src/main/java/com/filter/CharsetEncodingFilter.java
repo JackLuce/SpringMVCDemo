@@ -15,7 +15,7 @@ public class CharsetEncodingFilter implements Filter {
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
-        System.out.println("过滤器doFilter...");
+        System.out.println("过滤器doFilter...设置编码格式为utf8...");
         request.setCharacterEncoding("utf-8");
         response.setCharacterEncoding("utf-8");
         response.setContentType("text/html,charset=urf-8");
