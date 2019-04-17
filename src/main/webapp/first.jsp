@@ -197,36 +197,33 @@
          */
         function deleteSelectedRow(rowID) {
             //tr行数
-            var trNum = $("#myTable").find("tr").length;
-            if(trNum<=2){
-                //取消删除，取消checkbox选中
-                $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
-                    n = $(this).parents("tr").index();
-                    var boxes = document.getElementsByName("id");
-                    for (var i=0;i<boxes.length;i++){
-                        boxes[i].checked = false;
-                    }
-                    alert("源数据不可删！");
-                });
-            }else {
-                if ($("input[name='id']:checked").length>0){
-                    var con = confirm("确定删除所选行吗？");
-                    var n = 0;
-                    // alert(con);
-                    if (con == false) {
-                        //取消删除，取消checkbox选中
-                        $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
-                            n = $(this).parents("tr").index();
+            // var trNum = $("#myTable").find("tr").length;
+            if ($("input[name='id']:checked").length>0){
+                var con = confirm("确定删除所选行吗？");
+                var n = 0;
+                // alert(con);
+                if (con == false) {
+                    //取消删除，取消checkbox选中
+                    $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
+                        n = $(this).parents("tr").index();
+                        var boxes = document.getElementsByName("id");
+                        for (var i=0;i<boxes.length;i++){
+                            boxes[i].checked = false;
+                        }
+                    });
+                }else {
+                    $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
+                        n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
+                        if(n==1){
                             var boxes = document.getElementsByName("id");
                             for (var i=0;i<boxes.length;i++){
                                 boxes[i].checked = false;
                             }
-                        });
-                    }else {
-                        $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
-                            n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
+                            alert("源数据不可删！");
+                        }else {
                             $("table#myTable").find("tr:eq("+n+")").remove();
-                        });
+                        }
+                    });
 
                         //调用合计方法 重新计算合计
                         TotalPrice();
@@ -236,7 +233,6 @@
                 } else {
                     alert("请选择要删除的数据！");
                 }
-            }
         }
         /**
          * 合计方法
