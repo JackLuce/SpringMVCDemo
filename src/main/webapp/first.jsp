@@ -214,25 +214,58 @@
                 }else {
                     $("input[name='id']:checked").each(function() { // 遍历选中的checkbox
                         n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
-                        if(n==1){
+                        /**
+                         * 原始数据不可删除
+                         */
+                        if (n == 1) {
                             var boxes = document.getElementsByName("id");
-                            for (var i=0;i<boxes.length;i++){
+                            for (var i = 0; i < boxes.length; i++) {
                                 boxes[i].checked = false;
                             }
-                            alert("原始数据不可删！");
+                            alert("首行原始数据不可删！");
                         }else {
                             $("table#myTable").find("tr:eq("+n+")").remove();
                         }
                     });
 
-                        //调用合计方法 重新计算合计
-                        TotalPrice();
+                    //调用合计方法 重新计算合计
+                    TotalPrice();
 
-                        $("#" + rowID).remove();
-                    }
-                } else {
-                    alert("请选择要删除的数据！");
+                    $("#" + rowID).remove();
                 }
+            }else {
+                alert("请选择要删除的数据！");
+            }
+        }
+        /**
+         * refresh 刷新
+         */
+        function refresh(obj) {
+            //获取上上级tr 的demo
+            var tr = obj.parentNode.parentNode;
+            $("input[name='id']").each(function () { // 遍历选中的checkbox
+                var n = $(this).parents("tr").index();  // 获取checkbox所在行的顺序
+                if(n==1){
+                    //原始数据不清空
+                }else {
+                    //商品名称置空、价格置空  class已被修改为'blue' 见71、72行
+                    $(tr).find("select[class='blue']").val("-1");
+                }
+                //商品数量置空
+                $(tr).find("input[id='goodsNumber']").val("");
+                //小计置空
+                $(tr).find("input[id='goodsSubTotal']").val('');
+                //合计置空
+                $(tr).find("input[id='SubTotal']").val('');
+                /**
+                 * 取消checkbox选中
+                 * */
+                var boxes = document.getElementsByName("id");
+                for (var i = 0; i < boxes.length; i++) {
+                    boxes[i].checked = false;
+                }
+            });
+
         }
         /**
          * 合计方法
@@ -402,14 +435,14 @@
                 <input type="checkbox" id="id" name="id" value="${goods.id}"  style="border: 1px solid lightskyblue;text-align: center;width: 66px">
             </td>
             <td>
-                <select name="selectGoodsName" id = "selectGoodsName" class="selectGoodsName"  onchange="toGoodsPrice(this)" style="border: 1px solid lightskyblue;text-align: center;width: 82px">
+                <select name="selectGoodsName" id = "selectGoodsName" class="notSelectGoodsName"  onchange="toGoodsPrice(this)" style="border: 1px solid lightskyblue;text-align: center;width: 82px">
                     <c:forEach items="${listGoods}" var="goods">
                         <option name="GoodsName" value="${goods.name}">${goods.name}</option>
                     </c:forEach>
                 </select>
             </td>
             <td>
-                <select disabled name="SelectPrice" id= "SelectPrice" style="border: 1px solid lightskyblue;text-align: center;width: 82px">
+                <select disabled name="SelectPrice" id= "SelectPrice" class="notSelectPrice" style="border: 1px solid lightskyblue;text-align: center;width: 82px">
                     <c:forEach items="${listGoods}" var="goods">
                         <option id="goodsPrice" name = "goodsPrice">${goods.price}</option>
                     </c:forEach>
@@ -429,13 +462,16 @@
 <div style="margin-left: 373px;">
 <tr>
     <td>
-        <input type="button"  name="" value="导出饼图" style="margin-left: 100px;border: 1px solid lightskyblue;text-align: center;width: 80px"onclick="exportChart()">
+        <input type="button"  name="" value="刷新" style="margin-left: 100px;border: 1px solid lightskyblue;text-align: center;width: 80px"onclick="refresh(this)">
     </td>
     <td>
-        <input id="save" type="button" value="保存"  onclick="save()">
+        <input id="save" type="button" value="保存" style="border: 1px solid lightskyblue;" onclick="save()">
     </td>
     <td>
-        <input id="count"  type="button" value="统计商品数量" onclick="count()"/>
+        <input id="count"  type="button" value="统计商品数量" style="border: 1px solid lightskyblue;" onclick="count()"/>
+    </td>
+    <td>
+        <input type="button"  name="" value="导出饼图" style="border: 1px solid lightskyblue;text-align: center;width: 80px"onclick="exportChart()">
     </td>
 </tr>
 </div>
