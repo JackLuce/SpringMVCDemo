@@ -219,7 +219,7 @@
                             for (var i=0;i<boxes.length;i++){
                                 boxes[i].checked = false;
                             }
-                            alert("源数据不可删！");
+                            alert("原始数据不可删！");
                         }else {
                             $("table#myTable").find("tr:eq("+n+")").remove();
                         }
