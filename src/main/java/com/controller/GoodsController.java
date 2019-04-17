@@ -24,7 +24,9 @@ import javax.servlet.http.HttpServletResponse;
 import java.awt.*;
 import java.io.*;
 import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Controller
@@ -179,8 +181,12 @@ public class GoodsController {
         //excel标题
         String[] title = {"商品ID", "商品名称", "单价", "数量", "小计"};
 
+        Date date = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+        String currentTime = sdf.format(date);
+
         //excel文件名
-        String fileName = "单价大于1000商品销售信息表" + System.currentTimeMillis() + ".xls";
+        String fileName = "单价大于1000商品销售信息表" + currentTime + ".xls";
 
         //sheet名
         String sheetName = "单价大于1000商品销售信息表";
