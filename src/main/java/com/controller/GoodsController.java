@@ -6,6 +6,7 @@ import com.service.SaleDetailService;
 import com.serviceimpl.GoodsServiceImpl;
 import com.serviceimpl.SaleDetailServiceImpl;
 import com.util.ExcelUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartUtilities;
@@ -13,6 +14,8 @@ import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.PiePlot3D;
 import org.jfree.chart.title.TextTitle;
 import org.jfree.data.general.DefaultPieDataset;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,7 +34,9 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/")
+@Slf4j
 public class GoodsController {
+    private  final Logger logger = LoggerFactory.getLogger(GoodsController.class);
 
     private  GoodsService goodsService = new GoodsServiceImpl() ;
     private  SaleDetailService saleDetailService = new SaleDetailServiceImpl();
