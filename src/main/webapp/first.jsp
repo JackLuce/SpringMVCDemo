@@ -222,7 +222,12 @@
                             for (var i = 0; i < boxes.length; i++) {
                                 boxes[i].checked = false;
                             }
-                            alert("首行原始数据不可删！");
+                            //商品数量置空
+                            $("table#myTable").find("tr:eq("+n+")").find("input[id='goodsNumber']").val('');
+                            //小计置空
+                            $("table#myTable").find("tr:eq("+n+")").find("input[id='goodsSubTotal']").val('');
+
+                            alert("首行原始数据不可删，已重置！");
                         }else {
                             $("table#myTable").find("tr:eq("+n+")").remove();
                         }
