@@ -1,11 +1,9 @@
 package com.util;
 
 import com.entity.GoodsSaleDetailsExcel;
-import org.apache.poi.hssf.usermodel.HSSFCell;
-import org.apache.poi.hssf.usermodel.HSSFCellStyle;
-import org.apache.poi.hssf.usermodel.HSSFRow;
-import org.apache.poi.hssf.usermodel.HSSFSheet;
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.apache.poi.hssf.usermodel.*;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Font;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
@@ -128,6 +126,17 @@ public class ExcelUtil {
 
         // 第二步，在workbook中添加一个sheet,对应Excel文件中的sheet
         HSSFSheet sheet = wb.createSheet(sheetName);
+        sheet.setColumnWidth(0,3600);
+        sheet.setColumnWidth(1,2600);
+        sheet.setColumnWidth(2,2600);
+        sheet.setColumnWidth(3,2600);
+        sheet.setColumnWidth(4,2600);
+        sheet.setColumnWidth(5,3600);
+//        sheet.setColumnWidth((short) 0, (short) 2600);// 设置列宽
+//        sheet.setColumnWidth((short) 1, (short) 2400);
+//        sheet.setColumnWidth((short) 2, (short) 2300);
+//        sheet.setColumnWidth((short) 3, (short) 1600);
+//        sheet.setColumnWidth((short) 4, (short) 3600);
 
         // 第三步，在sheet中添加表头第0行,注意老版本poi对Excel的行数列数有限制
         HSSFRow row = sheet.createRow(0);
@@ -135,23 +144,41 @@ public class ExcelUtil {
         // 第四步，创建单元格，并设置值表头 设置表头居中
         HSSFCellStyle style = wb.createCellStyle();
         style.setAlignment(HSSFCellStyle.ALIGN_CENTER); // 创建一个居中格式
+        style.setVerticalAlignment(HSSFCellStyle.VERTICAL_CENTER);// 垂直对齐居中
+        style.setWrapText(true); // 设置为自动换行
+        HSSFFont cell_Font = (HSSFFont) wb.createFont();
+        cell_Font.setFontName("宋体");
+        cell_Font.setFontHeightInPoints((short) 8);
+        style.setFont(cell_Font);
+        style.setBorderBottom(HSSFCellStyle.BORDER_THIN); // 下边框
+        style.setBorderLeft(HSSFCellStyle.BORDER_THIN);// 左边框
+        style.setBorderTop(HSSFCellStyle.BORDER_THIN);// 上边框
+        style.setBorderRight(HSSFCellStyle.BORDER_THIN);// 右边框
 
         //声明列对象
         HSSFCell cell = null;
+
+        CellStyle cellStyle = wb.createCellStyle();
+        Font font = wb.createFont();
+        font.setFontName("宋体");
+        cellStyle.setFont(font);
 
         //创建标题
         for(int i=0;i<title.length;i++){
             cell = row.createCell(i);
             cell.setCellValue(title[i]);
-            cell.setCellStyle(style);
+            cell.setCellStyle(cellStyle);
         }
+
 
         //创建内容
         for(int i=0;i<values.length;i++){
             row = sheet.createRow(i + 1);
             for(int j=0;j<values[i].length;j++){
                 //将内容按顺序赋给对应的列对象
-                row.createCell(j).setCellValue(values[i][j]);
+                HSSFCell cell1 = row.createCell(j);
+                cell1.setCellValue(values[i][j]);
+                cell1.setCellStyle(cellStyle);
             }
         }
         return wb;
