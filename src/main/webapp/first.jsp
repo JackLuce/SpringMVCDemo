@@ -486,7 +486,7 @@
         <input id="count"  type="button" value="统计商品数量" style="border: 1px solid lightskyblue;" onclick="count()"/>
     </td>
     <td>
-        <input type="button"  name="" value="导出饼图" style="border: 1px solid lightskyblue;text-align: center;width: 80px"onclick="exportChart()">
+        <input type="button" hidden name="" value="" style="border: 1px solid lightskyblue;text-align: center;width: 80px"onclick="exportChart()">
     </td>
 </tr>
 </div>

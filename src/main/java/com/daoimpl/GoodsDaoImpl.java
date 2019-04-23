@@ -232,14 +232,14 @@ public class GoodsDaoImpl implements GoodsDao{
 	public List<GoodsSaleDetailsChart> findGoodsSaledetailsChart() {
 		Connection con = jdbcUtil.load();
 		List<GoodsSaleDetailsChart> list =new ArrayList<GoodsSaleDetailsChart>();
-		String sql = "select g.`name` as name , SUM(s.number) as sumnumber,SUM(s.subtotal) as sumtotal from sale_detail as s LEFT JOIN goods as g \n" +
-				"ON g.id = s.goodsno GROUP BY g.`name`";
+		String sql = "select g.name as name,count(g.name) as countGName ,sum(s.number)as sumnumber,sum(s.subtotal)as sumtotal from goods as g left join sale_detail as s on g.id = s.goodsno  group by g.name";
 		try {
 			stmt = con.prepareStatement(sql);
 			rsult = stmt.executeQuery();
 			while (rsult.next()) {
 				GoodsSaleDetailsChart saleDetailsChart = new GoodsSaleDetailsChart();
 				saleDetailsChart.setName(rsult.getString("name"));
+				saleDetailsChart.setCount(rsult.getInt("countGName"));
 				saleDetailsChart.setSumNumber(rsult.getLong("sumnumber"));
 				saleDetailsChart.setSumSubTotal(rsult.getLong("sumtotal"));
 				list.add(saleDetailsChart);
