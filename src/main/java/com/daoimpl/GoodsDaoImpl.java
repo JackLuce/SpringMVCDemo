@@ -24,7 +24,7 @@ public class GoodsDaoImpl implements GoodsDao{
 		Connection con = jdbcUtil.load();
 		List<GoodsSaleDetails> goodsSaleDetails  = new ArrayList<GoodsSaleDetails>();
 		
-		String sql  = "select g.*,s.* from goods as g left join sale_detail as s on g.id = s.goodsno where g.price >1000";
+		String sql  = "select g.*,s.* from goods as g left join sale_detail as s on g.id = s.goodsno where g.price >1000 and s.number >0";
 		try {
 			stmt = con.prepareStatement(sql);
 			rsult = stmt.executeQuery();
