@@ -7,24 +7,23 @@
 <meta charset="UTF-8">
 <title>单价大于1000的商品销售量</title>
 	<script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
-	<script>
-		function exportExcel() {
-		    var ids = document.getElementsByName("id").length;
-		    var
-                saleNo = "",
-				id = "",
-				name = "",
-				price = "",
-				number = "",
-				subTotal = "";
-		    for (var i=0;i<ids;i++){
+	<script type="text/javascript">
+        function exportExcel() {
+            var ids = document.getElementsByName("id").length;
+            var saleNo = "",
+                id = "",
+                name = "",
+                price = "",
+                number = "",
+                subTotal = "";
+            for (var i=0;i<ids;i++){
                 saleNo+=(document.getElementsByName("saleNo")[i].value)+",";
                 id+=(document.getElementsByName("id")[i].value)+",";
                 name += document.getElementsByName("name")[i].value+",";
                 price += document.getElementsByName("price")[i].value+",";
                 number += document.getElementsByName("number")[i].value+",";
                 subTotal += document.getElementsByName("subTotal")[i].value+",";
-		    }
+            }
             // alert(id);
             // alert(name);
             // alert(price);
@@ -32,39 +31,28 @@
             // alert(subTotal);
             //用window.location可以在浏览器页面下载，用ajax请求不可以在页面下载
             window.location.href = "exportExcel?saleNo="+saleNo+"&id="+id+"&name="+name+"&price="+price+"&number="+number+"&subTotal="+subTotal;
-
-		    /*$.ajax({
-                url: "exportExcel",
-                type: "POST",
-                data: {
-                    "id": id,
-                    "name": name,
-                    "price": price,
-                    "number": number,
-                    "subTotal": subTotal
-                },
-                dataType : "json",
-                // contentType: "application/json;charset=utf-8",
-                success: function(result) {
-                    response = result.success;
-                    var path = response.substr(2,(response.length-4));
-                    alert("导出成功！文件目录:"+path);
-                    if (response=="error") {
-                        location.href = "error.jsp";
-                    } else {
-                        location.href = "goodsSaleDetailsByPrice1000";
-                    }
-                }
+            /*$.get("exportExcel",{
+                "saleNo" :saleNo,
+                "id": id,
+                "name": name,
+                "price": price,
+                "number": number,
+                "subTotal": subTotal
+            },function (result) {
+                alert("hello");
             });*/
+        }
+        function goReturn() {
+			window.location.href = "showGoods";
         }
 	</script>
 </head>
 <body>
-<form action="" id="goodsSaledetailsForm" style="margin-top: 50px">
-<div>
+<form action="" id="goodsSaledetailsForm" style="margin-top: 50px;float: top">
+
 	<td>
-		<input type="submit" id="" name="" value="导出Excel" style="margin-left: 350px;border: 1px solid lightskyblue;text-align: center;width: 80px"onclick="exportExcel()">
-		<a href="showGoods" style="margin-left: 0px">返回</a>
+		<input type="button" value="导出Excel" style="margin-left: 345px;border: 1px solid lightskyblue;text-align: center;width: 80px"onclick="exportExcel()">
+		<input type="button" style="margin-left: 10px;border: 1px solid lightskyblue;text-align: center;" value="返回" onclick="goReturn()">
 	</td>
 <table style="margin-left:100px;">
 <tr>
@@ -86,8 +74,8 @@
 		<td>
 		<input type="text" id="subTotal" name="" value="小计" style="text-align: center;width: 100px" disabled="disabled">
 		</td>
-			<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
-			<div id="main" style="width: 500px;height:400px;float: right"></div>
+		<!-- 为 ECharts 准备一个具备大小（宽高）的 DOM -->
+		<div id="main" style="width: 500px;height:400px;float: right"></div>
 	</tr>
 <c:forEach items="${goodsSaleDetails}" var="GS" >
 	<tr>
@@ -113,8 +101,10 @@
 		</td>
 	</tr>
 </c:forEach>
+	<tr>
+		<div id="second" style="position: absolute;margin-top:350px;margin-left:730px;width: 500px;height:400px;"></div>
+	</tr>
 </table>
-</div>
 </form>
 <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts.min.js"></script>
 <script type="text/javascript">
@@ -124,8 +114,8 @@
     var data = genData();
     option = {
         title : {
-            text: '商品销售数量统计',
-            subtext: '单价大于1000商品销售数量统计',
+            text: '商品销量统计',
+            subtext: '所有商品的销售数量统计',
             x:'center'
         },
         tooltip : {
@@ -144,7 +134,7 @@
         },
         series : [
             {
-                name: '商品销量总额统计',
+                name: '商品销量',
                 type: 'pie',
                 radius : '55%',
                 center: ['40%', '50%'],
@@ -265,6 +255,84 @@
 
     // 使用刚指定的配置项和数据显示图表。
     myChart.setOption(option);
+</script>
+<script type="text/javascript">
+    var mySecondChart = echarts.init(document.getElementById('second'));
+    var dataTwo = getSecondData();
+    option = {
+        title : {
+            text: '商品销售总额统计',
+            subtext: '所有商品的销售总额统计',
+            x:'center'
+        },
+        tooltip : {
+            trigger: 'item',
+            formatter: "{a} <br/>{b} : {c} ({d}%)"
+        },
+        legend: {
+            type: 'scroll',
+            orient: 'vertical',
+            right: 10,
+            top: 20,
+            bottom: 20,
+            data: dataTwo.legendData,
+
+            selected: dataTwo.selected
+        },
+        series : [
+            {
+                name: '商品销售总额',
+                type: 'pie',
+                radius : '55%',
+                center: ['40%', '50%'],
+                data: dataTwo.seriesData,
+                itemStyle: {
+                    emphasis: {
+                        shadowBlur: 10,
+                        shadowOffsetX: 0,
+                        shadowColor: 'rgba(0, 0, 0, 0.5)'
+                    }
+                }
+            }
+        ]
+    };
+    function getSecondData() {
+        var goodsNameListArr = [];
+        var countArr = [];
+        var sumNumberArr = [];
+        var sumSubTotalArr = [];
+        goodsNameListArr = getGoodsNameList();
+        countArr = getGoodsCount();
+        sumNumberArr = getSumNumber();
+        sumSubTotalArr = getSumSubTotal();
+        //饼图数据
+        var legendData = [];
+        var seriesData = [];
+        var selected = {};
+        var count = 0;
+        var sumNumber = '';
+        var sumSubTotal = '';
+        for (var i = 0; i < goodsNameListArr.length; i++) {
+            name = goodsNameListArr[i];
+            count = countArr[i];
+            sumNumber = sumNumberArr[i];
+            sumSubTotal = sumSubTotalArr[i];
+            legendData.push(name);
+            var pushName = "商品名称:"+name+"---商品订单数:"+count+"---商品销售数量:"+sumNumber+"---商品销售总额:"+sumSubTotal
+            seriesData.push({
+                name: name,
+                value: sumSubTotal
+            });
+            selected[name] = i < 6;
+        }
+        return {
+            legendData: legendData,
+            seriesData: seriesData,
+            selected: selected
+        };
+    }
+    // 使用刚指定的配置项和数据显示图表。
+    mySecondChart.setOption(option);
 </script>
 </body>
 </html>

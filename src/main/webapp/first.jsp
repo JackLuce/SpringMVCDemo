@@ -11,7 +11,6 @@
 <head>
     <title>首页</title>
     <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
-    <script src="js/dialog.js"></script>
     <%--<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>--%>
     <%--<script type="text/javascript" src="js/jquery-3.0.0.min.js"></script><br/>--%>
     <%--<script type="text/javascript" src="js/jquery-3.0.0.js"></script><br/>--%>

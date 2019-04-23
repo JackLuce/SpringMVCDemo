@@ -232,7 +232,8 @@ public class GoodsDaoImpl implements GoodsDao{
 	public List<GoodsSaleDetailsChart> findGoodsSaledetailsChart() {
 		Connection con = jdbcUtil.load();
 		List<GoodsSaleDetailsChart> list =new ArrayList<GoodsSaleDetailsChart>();
-		String sql = "select g.name as name,count(g.name) as countGName ,sum(s.number)as sumnumber,sum(s.subtotal)as sumtotal from goods as g left join sale_detail as s on g.id = s.goodsno  group by g.name";
+//		String sql = "select g.name as name,count(g.name) as countGName ,sum(s.number)as sumnumber,sum(s.subtotal)as sumtotal from goods as g left join sale_detail as s on g.id = s.goodsno where g.price >1000  group by g.name";
+		String sql = "select g.name as name,count(g.name) as countGName ,sum(s.number)as sumnumber,sum(s.subtotal)as sumtotal from goods as g left join sale_detail as s on g.id = s.goodsno group by g.name";
 		try {
 			stmt = con.prepareStatement(sql);
 			rsult = stmt.executeQuery();
