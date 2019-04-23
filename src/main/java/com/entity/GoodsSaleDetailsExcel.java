@@ -5,11 +5,20 @@ package com.entity;
  */
 public class GoodsSaleDetailsExcel {
 
+    private String saleNo;
     private String id;
     private String name;
     private String price;
     private String number;
     private String subTotal;
+
+    public String getSaleNo() {
+        return saleNo;
+    }
+
+    public void setSaleNo(String saleNo) {
+        this.saleNo = saleNo;
+    }
 
     public String getId() {
         return id;
@@ -54,7 +63,8 @@ public class GoodsSaleDetailsExcel {
     @Override
     public String toString() {
         return "GoodsSaleDetailsExcel{" +
-                "id='" + id + '\'' +
+                "saleNo=" + saleNo +
+                ", id='" + id + '\'' +
                 ", name='" + name + '\'' +
                 ", price='" + price + '\'' +
                 ", number='" + number + '\'' +
@@ -69,15 +79,17 @@ public class GoodsSaleDetailsExcel {
         }
         //此处需要注意title内容与列数相匹配
         switch (j) {
-            case 0:setId(str);
+            case 0:setSaleNo(str);
                 break;
-            case 1:setName(str);
+            case 1:setId(str);
                 break;
-            case 2:setPrice(str);
+            case 2:setName(str);
                 break;
-            case 3:setNumber(str);
+            case 3:setPrice(str);
                 break;
-            case 4:setSubTotal(str);
+            case 4:setNumber(str);
+                break;
+            case 5:setSubTotal(str);
                 break;
             default:
                 break;
@@ -89,18 +101,21 @@ public class GoodsSaleDetailsExcel {
         //此处需要注意title内容与列数相匹配
         switch (j) {
             case 0:
-                str = getId();
+                str = getSaleNo();
                 break;
             case 1:
-                str = getName();
+                str = getId();
                 break;
             case 2:
-                str = getPrice();
+                str = getName();
                 break;
             case 3:
-                str = getNumber();
+                str = getPrice();
                 break;
             case 4:
+                str = getNumber();
+                break;
+            case 5:
                 str = getSubTotal();
                 break;
             default:

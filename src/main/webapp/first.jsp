@@ -11,6 +11,7 @@
 <head>
     <title>首页</title>
     <script src="http://code.jquery.com/jquery-2.0.0.min.js"></script>
+    <script src="js/dialog.js"></script>
     <%--<script src="http://code.jquery.com/jquery-2.1.4.min.js"></script>--%>
     <%--<script type="text/javascript" src="js/jquery-3.0.0.min.js"></script><br/>--%>
     <%--<script type="text/javascript" src="js/jquery-3.0.0.js"></script><br/>--%>
@@ -228,6 +229,15 @@
                             $("table#myTable").find("tr:eq("+n+")").find("input[id='goodsSubTotal']").val('');
 
                             alert("首行原始数据不可删，已重置！");
+                            var options = {
+                                'dialogType' : 'info',
+                                'theme' : 'info',
+                                'message' : '首行原始数据不可删，已重置！！',
+                                'refresh' : false
+                            };
+                            // $("#NotDelete").showInfoDialog(options);
+                            // $("#NotDelete").dialog({type:'success'})
+
                         }else {
                             $("table#myTable").find("tr:eq("+n+")").remove();
                         }
@@ -459,8 +469,8 @@
             </td>
             <td>
                 <input type="text" id="goodsSubTotal" name="goodsSubTotal" disabled value="" style="border: 1px solid lightskyblue;text-align: center;width: 120px;background: #F4A460">
+                <span id="NotDelete"></span>
             </td>
-
         </tr>
     </table>
 </form>

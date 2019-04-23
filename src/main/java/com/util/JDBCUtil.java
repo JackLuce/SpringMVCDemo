@@ -4,9 +4,13 @@ import java.sql.*;
 
 public class JDBCUtil {
 	private static String mysqlName="com.mysql.jdbc.Driver";
-	private static String url="jdbc:mysql://localhost:3306/jrtest?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
 	private static String userName = "root";
-	private static String password="root";
+	//本地mysql
+//	private static String url="jdbc:mysql://localhost:3306/jrtest?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
+//	private static String password="root";//本地mysql密码
+	//虚拟机mysql
+	private static String url="jdbc:mysql://192.168.63.200:3306/jrtest?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC";
+	private static String password="123456";//虚拟机mysql密码
 
 	private static Connection con=null;
 //	private static PreparedStatement stmt=null;

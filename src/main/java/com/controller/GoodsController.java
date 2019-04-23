@@ -155,6 +155,9 @@ public class GoodsController {
     @ResponseBody
     @RequestMapping(value = "/exportExcel",method = RequestMethod.GET)
     public String exportExcel(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        //获取销售id
+        String saleNoStr = request.getParameter("saleNo");
+        String[] saleNos = saleNoStr.split(",");
         //获取id
         String idsStr = request.getParameter("id");
         String[] ids = idsStr.split(",");
@@ -175,6 +178,7 @@ public class GoodsController {
 
         for (int i = 0; i < ids.length; i++) {
             GoodsSaleDetailsExcel goodsSaleDetailsExcel = new GoodsSaleDetailsExcel();
+            goodsSaleDetailsExcel.setSaleNo(saleNos[i]);
             goodsSaleDetailsExcel.setId(ids[i]);
             goodsSaleDetailsExcel.setName(names[i]);
             goodsSaleDetailsExcel.setPrice(prices[i]);

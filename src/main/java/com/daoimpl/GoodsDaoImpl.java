@@ -35,7 +35,8 @@ public class GoodsDaoImpl implements GoodsDao{
 					goods.setId(rsult.getInt("id"));
 					goods.setName(rsult.getString("name"));
 					goods.setPrice(rsult.getDouble("price"));
-				 	saleDetail.setGoodsNo(rsult.getInt("goodsno"));
+					saleDetail.setSaleNo(rsult.getLong("saleNo"));
+					saleDetail.setGoodsNo(rsult.getInt("goodsno"));
 					saleDetail.setNumber(rsult.getInt("number"));
 					saleDetail.setSubTotal(rsult.getDouble("subtotal"));
 					gSaleDetails.setGoods(goods);

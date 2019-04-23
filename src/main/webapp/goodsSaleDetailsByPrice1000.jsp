@@ -10,12 +10,15 @@
 	<script>
 		function exportExcel() {
 		    var ids = document.getElementsByName("id").length;
-		    var id = "",
+		    var
+                saleNo = "",
+				id = "",
 				name = "",
 				price = "",
 				number = "",
 				subTotal = "";
 		    for (var i=0;i<ids;i++){
+                saleNo+=(document.getElementsByName("saleNo")[i].value)+",";
                 id+=(document.getElementsByName("id")[i].value)+",";
                 name += document.getElementsByName("name")[i].value+",";
                 price += document.getElementsByName("price")[i].value+",";
@@ -28,7 +31,7 @@
             // alert(number);
             // alert(subTotal);
             //用window.location可以在浏览器页面下载，用ajax请求不可以在页面下载
-            window.location.href = "exportExcel?id="+id+"&name="+name+"&price="+price+"&number="+number+"&subTotal="+subTotal;
+            window.location.href = "exportExcel?saleNo="+saleNo+"&id="+id+"&name="+name+"&price="+price+"&number="+number+"&subTotal="+subTotal;
 
 		    /*$.ajax({
                 url: "exportExcel",
@@ -58,8 +61,11 @@
 </head>
 <body>
 <form action="" id="goodsSaledetailsForm">
-<table style="margin-left: 200px;margin-top: 50px">
+<table style="margin-left: 100px;margin-top: 50px">
 <tr>
+		<td>
+		<input type="text" id="saleNo" name="" value="商品销售ID" style="text-align: center;" disabled="disabled">
+		</td>
 		<td>
 		<input type="text" id="id" name="" value="商品ID" style="text-align: center;" disabled="disabled">
 		</td>
@@ -78,6 +84,9 @@
 	</tr>
 <c:forEach items="${goodsSaleDetails}" var="GS" >
 	<tr>
+		<td>
+		<input  type="text" id="goodsSaleNo"  name="saleNo" value="${GS.saleDetail.saleNo}" style="text-align: center;">
+		</td>
 		<td>
 		<input  type="text" id="goodsId"  name="id" value="${GS.goods.id}" style="text-align: center;">
 		</td>
