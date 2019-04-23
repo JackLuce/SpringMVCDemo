@@ -406,6 +406,14 @@
             window.location.href = "findGoodsSaledetailsChart";
         }
     </script>
+    <STYLE TYPE="text/css">
+        <!--
+        BODY {background-image: URL(images/00.png);
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;}
+        -->
+    </STYLE>
 </head>
 <body>
 <p style="margin-left: 550px;margin-top: 30px;color: red;font-size: 25px">

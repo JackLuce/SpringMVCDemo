@@ -20,6 +20,9 @@
              <bean class="org.springframework.http.converter.json.MappingJackson2HttpMessageConverter"/>
         </mvc:message-converters>
     </mvc:annotation-driven>
+    <!--  springMVC  访问静态资源png  -->
+    <mvc:resources mapping="/images/**" location="/images/"></mvc:resources>
+
     <!--  视图解析器-->
     <bean  class="org.springframework.web.servlet.view.UrlBasedViewResolver">
         <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>
