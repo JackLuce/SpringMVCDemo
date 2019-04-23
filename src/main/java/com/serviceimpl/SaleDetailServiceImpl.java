@@ -29,6 +29,11 @@ public class SaleDetailServiceImpl implements SaleDetailService {
 	}
 
 	@Override
+	public List<GoodsSaleDetails> findGoodsSaleDeatilsByName(String name) {
+		return saleDetailDao.findGoodsSaleDeatilsByName(name);
+	}
+
+	@Override
 	public SaleDetail findByID(int id) {
 		return saleDetailDao.findByID(id);
 	}

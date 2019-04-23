@@ -141,6 +141,8 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 		}
 		return 0;
 	}
+
+
 	/**
 	 * 查询商品和销售表所有
 	 * @return
@@ -154,6 +156,43 @@ public class SaleDetailDaoImpl implements SaleDetailDao{
 			stmt = con.prepareStatement(sql);
 
 			ResultSet rsult = stmt.executeQuery(); 
+			while (rsult.next()) {
+				GoodsSaleDetails goodsSaleDetails = new GoodsSaleDetails();
+				SaleDetail saleDetail =new SaleDetail();
+				Goods goods = new Goods();
+				goods.setId(rsult.getInt("id"));
+				goods.setName(rsult.getString("name"));
+				goods.setPrice(rsult.getDouble("price"));
+				saleDetail.setSaleNo(rsult.getLong("saleNo"));
+				saleDetail.setGoodsNo(rsult.getInt("goodsNo"));
+				saleDetail.setNumber(rsult.getInt("number"));
+				saleDetail.setSubTotal(rsult.getDouble("subTotal"));
+				goodsSaleDetails.setGoods(goods);
+				goodsSaleDetails.setSaleDetail(saleDetail);
+				goodsSaleDetailsList.add(goodsSaleDetails);
+			}
+			return goodsSaleDetailsList;
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}finally {
+			jdbcUtil.close(rsult,stmt, con);
+		}
+		return null;
+	}
+
+	/**
+	 * 根据name查找销售情况
+	 * @return
+	 */
+	@Override
+	public List<GoodsSaleDetails> findGoodsSaleDeatilsByName(String name) {
+		Connection con = jdbcUtil.load();
+		List<GoodsSaleDetails> goodsSaleDetailsList = new  ArrayList<GoodsSaleDetails>();
+		String sql = "select * from goods as g left join sale_detail as s on g.id  = s.goodsno where g.name = ?";
+		try {
+			stmt = con.prepareStatement(sql);
+			stmt.setString(1,name);
+			ResultSet rsult = stmt.executeQuery();
 			while (rsult.next()) {
 				GoodsSaleDetails goodsSaleDetails = new GoodsSaleDetails();
 				SaleDetail saleDetail =new SaleDetail();

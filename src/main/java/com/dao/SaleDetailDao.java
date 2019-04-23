@@ -42,4 +42,10 @@ public interface SaleDetailDao {
 	 * @return
 	 */
 	public int delete(SaleDetail saleDetail);
+
+	/**
+	 * 根据name查找销售情况
+	 * @return
+	 */
+	public List<GoodsSaleDetails> findGoodsSaleDeatilsByName(String name);
 }
