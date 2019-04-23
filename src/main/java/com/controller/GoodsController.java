@@ -188,7 +188,7 @@ public class GoodsController {
         }
 
         //excel标题
-        String[] title = {"商品ID", "商品名称", "单价", "数量", "小计"};
+        String[] title = {"商品销售ID","商品ID", "商品名称", "单价", "数量", "小计"};
 
         Date date = new Date();
         SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
