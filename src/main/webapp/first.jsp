@@ -416,7 +416,7 @@
     </STYLE>
 </head>
 <body>
-<p style="margin-left: 550px;margin-top: 30px;color: red;font-size: 25px">
+<p style="margin-left: 550px;margin-top: 30px;color: yellowgreen;font-size: 25px">
 首页！
 </p>
 <div style="margin-left: 373px;margin-top: 20px;">
