@@ -404,6 +404,7 @@
             window.location.href = "findGoodsSaledetailsChart";
         }
     </script>
+    <%--设置body背景图片样式--%>
     <STYLE TYPE="text/css">
         <!--
         BODY {background-image: URL(images/00.png);
