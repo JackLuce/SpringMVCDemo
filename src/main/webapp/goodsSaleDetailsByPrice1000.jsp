@@ -86,22 +86,22 @@
 <c:forEach items="${goodsSaleDetails}" var="GS" >
 	<tr>
 		<td>
-		<input  type="text" id="goodsSaleNo"  name="saleNo" value="${GS.saleDetail.saleNo}" style="text-align: center;width: 100px">
+		<input disabled  type="text" id="goodsSaleNo"  name="saleNo" value="${GS.saleDetail.saleNo}" style="text-align: center;width: 100px">
 		</td>
 		<td>
-		<input  type="text" id="goodsId"  name="id" value="${GS.goods.id}" style="text-align: center;width: 100px">
+		<input disabled type="text" id="goodsId"  name="id" value="${GS.goods.id}" style="text-align: center;width: 100px">
 		</td>
 		<td>
-		<input type="text" id="goodsName"  name="name" value="${GS.goods.name}"  style="text-align: center;width: 100px">
+		<input disabled type="text" id="goodsName"  name="name" value="${GS.goods.name}"  style="text-align: center;width: 100px">
 		</td>
 		<td>
-		<input type="text" id="goodsPrice" name="price" value="${GS.goods.price}"  style="text-align: center;width: 100px">
+		<input disabled type="text" id="goodsPrice" name="price" value="${GS.goods.price}"  style="text-align: center;width: 100px">
 		</td>
 		<td>
-		<input type="text" id="saleDetailNumber" name="number" value="${GS.saleDetail.number}" style="text-align: center;width: 100px">
+		<input disabled type="text" id="saleDetailNumber" name="number" value="${GS.saleDetail.number}" style="text-align: center;width: 100px">
 		</td>
 		<td>
-		<input type="text" id="saleDetailSubTotal" name="subTotal" value="${GS.saleDetail.subTotal}" style="text-align: center;width: 100px">
+		<input disabled type="text" id="saleDetailSubTotal" name="subTotal" value="${GS.saleDetail.subTotal}" style="text-align: center;width: 100px">
 		</td>
 		<td>
 		</td>
