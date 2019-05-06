@@ -6,6 +6,12 @@
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%
+    String path = request.getContextPath();
+    String basePath = request.getScheme()+"://"+request.getServerName()+":"+request.getServerPort()+path+"/";
+%>
+<link rel="shortcut icon" href="<%=basePath%>images/earth.png" type="image/x-icon" />
+
 <html>
 <head>
     <title>error</title>
